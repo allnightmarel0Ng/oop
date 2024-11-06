@@ -3,13 +3,31 @@ project(lab3)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(lab3
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG        release-1.11.0)
+
+FetchContent_MakeAvailable(
+        googletest)
+
+add_executable(main
         src/main.cpp
-        src/figure.h
-        src/rectangle.h
         src/rectangle.cpp
         src/point.cpp
-        src/point.h
         src/trapezoid.cpp
-        src/trapezoid.h
-        src/trapezoid.h)
+        src/rhombus.cpp
+        src/vector.cpp)
+
+add_executable(test 
+        tests/main.cpp
+        src/rectangle.cpp
+        src/point.cpp
+        src/trapezoid.cpp
+        src/rhombus.cpp
+        src/vector.cpp)
+target_link_libraries(
+        test
+        PRIVATE
+        gtest_main)

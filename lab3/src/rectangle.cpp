@@ -1,37 +1,32 @@
 #include "rectangle.h"
 
-Rectangle::Rectangle():
-    _points({
-        Point(0., 0.),
-        Point(1., 0.),
-        Point(0., 1.),
-        Point(1., 1.),
-    })
+Rectangle::Rectangle(
+    const Point &p1, 
+    const Point &p2, 
+    const Point &p3, 
+    const Point &p4):
+    _points({p1, p2, p3, p4})
 {
-
+    if (!validate())
+    {
+        throw std::invalid_argument("Invalid rectangle points");
+    }
 }
 
-Point Rectangle::center() const noexcept
+Point Rectangle::Center() const noexcept
 {
-    auto minX = _points[0].x;
-    auto maxX = _points[0].x;
-    auto minY = _points[0].y;
-    auto maxY = _points[0].y;
-
-    for (const auto &point : _points)
+    double cx = 0, cy = 0;
+    for (const auto &p: _points) 
     {
-        if (point.x < minX) minX = point.x;
-        if (point.x > maxX) maxX = point.x;
-        if (point.y < minY) minY = point.y;
-        if (point.y > maxY) maxY = point.y;
+        cx += p.x;
+        cy += p.y;
     }
-
-    return Point((minX + maxX) / 2.0, (minY + maxY) / 2.0);
+    return Point(cx / 4, cy / 4);
 }
 
 Rectangle::operator double() const noexcept
 {
-    return _points[0].distance(_points[1]) * _points[0].distance(_points[3]);
+    return _points[0].distance(_points[1]) * _points[1].distance(_points[2]);
 }
 
 bool Rectangle::operator==(const Rectangle &other) const noexcept
@@ -63,16 +58,24 @@ std::istream &operator>>(std::istream &is, Rectangle &rectangle)
     for (std::size_t i = 0; i < 4; i++)
     {
         is >> rectangle._points[i];
-        if (i > 0)
-        {
-            if (rectangle._points[i] == rectangle._points[i - 1] ||
-            (rectangle._points[i].x != rectangle._points[i - 1].x && rectangle._points[i].y != rectangle._points[i - 1].y))
-            {
-                throw std::invalid_argument("Not a rectangle points");
-            }
-        }
+    }
+
+    if (!rectangle.validate())
+    {
+        throw std::invalid_argument("Not a rectangle points");
     }
     return is;
 }
 
+bool Rectangle::validate() const noexcept
+{
+    for (std::size_t i = 1; i < _points.size(); i++)
+    {
+        if (_points[i].x != _points[i - 1].x && _points[i].y != _points[i - 1].y)
+        {
+            return false;
+        }
+    }
 
+    return true;
+}

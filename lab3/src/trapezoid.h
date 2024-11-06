@@ -9,7 +9,11 @@ class Trapezoid final:
     public Figure
 {
 public:
-    explicit Trapezoid();
+    explicit Trapezoid(
+        const Point &p1 = Point(), 
+        const Point &p2 = Point(), 
+        const Point &p3 = Point(), 
+        const Point &p4 = Point());
 
 public:
     ~Trapezoid() override = default;
@@ -19,7 +23,7 @@ public:
     Trapezoid &operator=(Trapezoid &&other) = default;
 
 public:
-    [[nodiscard]] Point center() const noexcept override;
+    [[nodiscard]] Point Center() const noexcept override;
     explicit operator double() const noexcept override;
 
 public:
@@ -29,6 +33,11 @@ public:
 public:
     friend std::ostream &operator<<(std::ostream &os, const Trapezoid &trapezoid);
     friend std::istream &operator>>(std::istream &is, Trapezoid &trapezoid);
+
+
+private:
+    inline static double slope(const Point &one, const Point &another) noexcept;
+    bool validate() const noexcept;
 
 private:
     std::array<Point, 4> _points;

@@ -14,7 +14,7 @@ public:
     virtual ~Figure() = default;
 
 public:
-    [[nodiscard]] virtual Point center() const noexcept = 0;
+    [[nodiscard]] virtual Point Center() const noexcept = 0;
     virtual explicit operator double() const noexcept = 0;
 
 };

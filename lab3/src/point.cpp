@@ -33,7 +33,7 @@ std::istream &operator>>(std::istream &is, Point &point)
 
 double Point::distance(const Point &other) const noexcept
 {
-    auto dx = x - other.y;
+    auto dx = x - other.x;
     auto dy = y - other.y;
     return std::sqrt(dx * dx + dy * dy);
 }
