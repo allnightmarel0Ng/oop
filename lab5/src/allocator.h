@@ -5,15 +5,9 @@
 #include <vector>
 #include <stdexcept>
 
-template <typename T, std::size_t BlockSize>
+template <typename T>
 class Allocator
 {
-
-public:
-    template <typename U>
-    struct rebind {
-        using other = Allocator<U, BlockSize>;
-    };
 
 public:
     using value_type = T;
@@ -22,7 +16,7 @@ public:
     using size_type = size_t;
 
 public:
-    Allocator();
+    Allocator() = default;
 
 public:
     pointer allocate(size_type size);
@@ -30,44 +24,35 @@ public:
 
 public:
     virtual ~Allocator();
-    Allocator(const Allocator<value_type, BlockSize> &other);
-    Allocator &operator=(const Allocator<value_type, BlockSize> &other);
-    Allocator(Allocator<value_type, BlockSize> &&other) noexcept;
-    Allocator& operator=(Allocator<value_type, BlockSize> &&other) noexcept;
+    Allocator(const Allocator<value_type> &other);
+    Allocator &operator=(const Allocator<value_type> &other);
+    Allocator(Allocator<value_type> &&other) noexcept;
+    Allocator& operator=(Allocator<value_type> &&other) noexcept;
 
 private:
     void clear() noexcept;
-    void copyFrom(const Allocator<value_type, BlockSize> &other);
-    void moveFrom(Allocator<value_type, BlockSize> &&other) noexcept;
+    void copyFrom(const Allocator<value_type> &other);
+    void moveFrom(Allocator<value_type> &&other) noexcept;
 
 private:
     std::vector<std::pair<pointer, size_type>> _blocks;
 
 };
 
-template<typename T, std::size_t BlockSize>
-Allocator<T, BlockSize>::Allocator()
+template<typename T>
+typename Allocator<T>::pointer Allocator<T>::allocate(std::size_t size)
 {
-    if (BlockSize == 0)
-    {
-        throw std::logic_error("Unable to allocate blocks of 0 size");
-    }
-}
-
-template<typename T, std::size_t BlockSize>
-typename Allocator<T, BlockSize>::pointer Allocator<T, BlockSize>::allocate(std::size_t size)
-{
-    auto result = new T[BlockSize * size];
-    _blocks.push_back(std::make_pair(result, BlockSize * size));
+    auto result = new T[size];
+    _blocks.push_back(std::make_pair(result, size));
     return result;
 }
 
-template<typename T, std::size_t BlockSize>
-void Allocator<T, BlockSize>::deallocate(pointer at, std::size_t size)
+template<typename T>
+void Allocator<T>::deallocate(pointer at, std::size_t size)
 {
     for (auto it = _blocks.begin(); it != _blocks.end(); ++it)
     {
-        if (it->first == at)
+        if (it->first == at && it->second == size)
         {
             delete[] it->first;
             _blocks.erase(it);
@@ -76,20 +61,20 @@ void Allocator<T, BlockSize>::deallocate(pointer at, std::size_t size)
     }
 }
 
-template<typename T, std::size_t BlockSize>
-Allocator<T, BlockSize>::~Allocator()
+template<typename T>
+Allocator<T>::~Allocator()
 {
     clear();
 }
 
-template<typename T, std::size_t BlockSize>
-Allocator<T, BlockSize>::Allocator(const Allocator<T, BlockSize> &other)
+template<typename T>
+Allocator<T>::Allocator(const Allocator<T> &other)
 {
     copyFrom(other);
 }
 
-template<typename T, std::size_t BlockSize>
-Allocator<T, BlockSize> &Allocator<T, BlockSize>::operator=(const Allocator<T, BlockSize> &other)
+template<typename T>
+Allocator<T> &Allocator<T>::operator=(const Allocator<T> &other)
 {
     if (this != &other)
     {
@@ -100,14 +85,14 @@ Allocator<T, BlockSize> &Allocator<T, BlockSize>::operator=(const Allocator<T, B
     return *this;
 }
 
-template<typename T, std::size_t BlockSize>
-Allocator<T, BlockSize>::Allocator(Allocator<T, BlockSize> &&other) noexcept
+template<typename T>
+Allocator<T>::Allocator(Allocator<T> &&other) noexcept
 {
     moveFrom(std::move(other));
 }
 
-template<typename T, std::size_t BlockSize>
-Allocator<T, BlockSize> &Allocator<T, BlockSize>::operator=(Allocator<T, BlockSize> &&other) noexcept
+template<typename T>
+Allocator<T> &Allocator<T>::operator=(Allocator<T> &&other) noexcept
 {
     if (this != &other)
     {
@@ -118,8 +103,8 @@ Allocator<T, BlockSize> &Allocator<T, BlockSize>::operator=(Allocator<T, BlockSi
     return *this;
 }
 
-template<typename T, std::size_t BlockSize>
-void Allocator<T, BlockSize>::clear() noexcept
+template<typename T>
+void Allocator<T>::clear() noexcept
 {
     for (auto it = _blocks.begin(); it != _blocks.cend();)
     {
@@ -128,8 +113,8 @@ void Allocator<T, BlockSize>::clear() noexcept
     }
 }
 
-template<typename T, std::size_t BlockSize>
-void Allocator<T, BlockSize>::copyFrom(const Allocator<T, BlockSize> &other)
+template<typename T>
+void Allocator<T>::copyFrom(const Allocator<T> &other)
 {
     for (const auto &block: other._blocks)
     {
@@ -137,8 +122,8 @@ void Allocator<T, BlockSize>::copyFrom(const Allocator<T, BlockSize> &other)
     }
 }
 
-template<typename T, std::size_t BlockSize>
-void Allocator<T, BlockSize>::moveFrom(Allocator<T, BlockSize> &&other) noexcept
+template<typename T>
+void Allocator<T>::moveFrom(Allocator<T> &&other) noexcept
 {
     _blocks = std::move(other._blocks);
 }
