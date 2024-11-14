@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/test.dir/tests/main.cpp.o CMakeFiles/test.dir/src/npc.cpp.o CMakeFiles/test.dir/src/visitor.cpp.o CMakeFiles/test.dir/src/factory.cpp.o CMakeFiles/test.dir/src/observer.cpp.o "CMakeFiles/test.dir/src/game-handler.cpp.o" -o test  lib/libgtest_main.a lib/libgtest.a 
