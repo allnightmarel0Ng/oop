@@ -1,0 +1,14 @@
+# Target labels
+ googletest-populate
+# Source files and their labels
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/CMakeFiles/googletest-populate
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/CMakeFiles/googletest-populate.rule
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/CMakeFiles/googletest-populate-complete.rule
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-build.rule
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-configure.rule
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-download.rule
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-install.rule
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-mkdir.rule
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-patch.rule
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-test.rule
+/home/wsl/develop/oop/lab6/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-update.rule
