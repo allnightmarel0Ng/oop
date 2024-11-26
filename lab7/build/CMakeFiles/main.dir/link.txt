@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/main.dir/src/main.cpp.o CMakeFiles/main.dir/src/npc.cpp.o CMakeFiles/main.dir/src/visitor.cpp.o CMakeFiles/main.dir/src/factory.cpp.o CMakeFiles/main.dir/src/observer.cpp.o "CMakeFiles/main.dir/src/game-handler.cpp.o" -o main 
