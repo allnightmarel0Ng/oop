@@ -1,0 +1,3 @@
+/home/wsl/develop/oop/lab7/build/CMakeFiles/main.dir
+/home/wsl/develop/oop/lab7/build/CMakeFiles/edit_cache.dir
+/home/wsl/develop/oop/lab7/build/CMakeFiles/rebuild_cache.dir
