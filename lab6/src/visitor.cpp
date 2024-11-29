@@ -12,11 +12,11 @@ void Fighter::Visit(Orc &ref) noexcept
     int y = ref.GetYCoordinate();
     int attackRange = ref.GetAttackRange();
 
-    auto leftBound = std::max(x - attackRange, 0);
-    auto rightBound = std::min(x + attackRange, 500);
+    auto leftBound = x < attackRange ? 0 : x - attackRange;
+    auto rightBound = std::min(x + attackRange, 499);
 
-    auto upperBound = std::max(y - attackRange, 0);
-    auto lowerBound = std::min(y + attackRange, 500);
+    auto upperBound = y < attackRange ? 0 : y - attackRange;
+    auto lowerBound = std::min(y + attackRange, 499);
 
     for (std::size_t i = leftBound; i <= rightBound; i++)
     {
@@ -51,11 +51,11 @@ void Fighter::Visit(Bear &ref) noexcept
     int y = ref.GetYCoordinate();
     int attackRange = ref.GetAttackRange();
 
-    auto leftBound = std::max(x - attackRange, 0);
-    auto rightBound = std::min(x + attackRange, 500);
+    auto leftBound = x < attackRange ? 0 : x - attackRange;
+    auto rightBound = std::min(x + attackRange, 499);
 
-    auto upperBound = std::max(y - attackRange, 0);
-    auto lowerBound = std::min(y + attackRange, 500);
+    auto upperBound = y < attackRange ? 0 : y - attackRange;
+    auto lowerBound = std::min(y + attackRange, 499);
 
     for (std::size_t i = leftBound; i <= rightBound; i++)
     {

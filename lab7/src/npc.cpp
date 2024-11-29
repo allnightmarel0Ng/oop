@@ -24,7 +24,7 @@ Orc::Orc(const std::string &name, std::size_t coordX, std::size_t coordY):
     
 }
 
-bool Orc::Accept(Visitor *visitor)
+void Orc::Accept(Visitor *visitor)
 {
     return visitor->Visit(*this);
 }
@@ -54,12 +54,12 @@ bool Orc::GetAliveStatus() const noexcept
     return this->_isAlive;
 }
 
-std::size_t Orc::GetXCoordinate() const noexcept
+std::size_t &Orc::GetXCoordinate() noexcept
 {
     return this->_place.x;
 }
 
-std::size_t Orc::GetYCoordinate() const noexcept
+std::size_t &Orc::GetYCoordinate() noexcept
 {
     return this->_place.y;
 }
@@ -82,7 +82,7 @@ Squirrel::Squirrel(const std::string &name, std::size_t coordX, std::size_t coor
 
 }
 
-bool Squirrel::Accept(Visitor *visitor)
+void Squirrel::Accept(Visitor *visitor)
 {
     return visitor->Visit(*this);
 }
@@ -112,12 +112,12 @@ bool Squirrel::GetAliveStatus() const noexcept
     return this->_isAlive;
 }
 
-std::size_t Squirrel::GetXCoordinate() const noexcept
+std::size_t &Squirrel::GetXCoordinate() noexcept
 {
     return this->_place.x;
 }
 
-std::size_t Squirrel::GetYCoordinate() const noexcept
+std::size_t &Squirrel::GetYCoordinate() noexcept
 {
     return this->_place.y;
 }
@@ -140,7 +140,7 @@ Bear::Bear(const std::string &name, std::size_t coordX, std::size_t coordY):
 
 }
 
-bool Bear::Accept(Visitor *visitor)
+void Bear::Accept(Visitor *visitor)
 {
     return visitor->Visit(*this);
 }
@@ -170,12 +170,12 @@ bool Bear::GetAliveStatus() const noexcept
     return this->_isAlive;
 }
 
-std::size_t Bear::GetXCoordinate() const noexcept
+std::size_t &Bear::GetXCoordinate() noexcept
 {
     return this->_place.x;
 }
 
-std::size_t Bear::GetYCoordinate() const noexcept
+std::size_t &Bear::GetYCoordinate() noexcept
 {
     return this->_place.y;
 }

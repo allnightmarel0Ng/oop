@@ -1,5 +1,65 @@
 #include "common.h"
 
+std::shared_ptr<Fighter> Fighter::_instance = nullptr;
+
+Fighter::Fighter(std::shared_mutex &smutex, std::atomic<bool> &run):
+    _smutex(smutex), _run(run)
+{
+
+}
+
+void Fighter::ConstructInstance(std::shared_mutex &smutex, std::atomic<bool> &run)
+{
+    static auto newInstance = std::shared_ptr<Fighter>(new Fighter(smutex, run));
+    _instance = newInstance;
+}
+
+std::shared_ptr<Fighter> Fighter::GetInstance()
+{
+    return _instance;
+}
+
+void Fighter::operator()() noexcept
+{
+    while (_run.load())
+    {
+        Cell *attacker = nullptr;
+        Cell *defender = nullptr;
+
+        {
+            std::lock_guard<std::shared_mutex> sl(_smutex);
+            if (_fights.empty())
+            {
+                continue;
+            }
+
+            attacker = &_fights.back().attacker;
+            defender = &_fights.back().defender;
+            _fights.pop();
+        }
+        
+        if (attacker != nullptr && defender != nullptr && attacker->Object != nullptr && defender->Object != nullptr && attacker->Object->GetAliveStatus() && defender->Object->GetAliveStatus())
+        {
+            auto attackerPower = std::rand() % 6;
+            auto defenderPower = std::rand() % 6;
+            
+            if (attackerPower > defenderPower)
+            {
+                defender->Object->SetAliveStatus(false);
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+
+    }
+}
+
+void Fighter::addFight(Cell &attacker, Cell &defender)
+{
+    std::lock_guard<std::shared_mutex> lg(_smutex);
+    _fights.push((Fight){attacker, defender});
+}
+
 void GameHandler::Game(std::size_t size)
 {
     Field field(size, std::vector<Cell>(size, std::move(Cell())));
@@ -8,7 +68,6 @@ void GameHandler::Game(std::size_t size)
         std::make_unique<FileLogger>(), 
         std::make_unique<ConsoleLogger>()};
 
-    std::unique_ptr<Visitor> visitor = std::make_unique<Fighter>(field, observers);
 
     for (std::size_t i = 0; i < 50; ++i)
     {
@@ -43,28 +102,79 @@ void GameHandler::Game(std::size_t size)
     }
 
     std::atomic<bool> run = true;
-    std::mutex fieldMutex;
+    std::mutex mutex;
+    std::shared_mutex smutex;
 
-    std::thread movement([&field, &visitor, &fieldMutex, &run]{
+    auto mover = std::make_shared<Mover>(field, observers);
+    Fighter::ConstructInstance(smutex, run);
+    std::thread fighting(std::ref(*Fighter::GetInstance()));
+    std::thread movement([&field, &mover, &mutex, &smutex, &run]{
         while (run.load())
         {
             {
-                std::shared_lock<std::mutex> sl(fieldMutex);
+                std::lock_guard<std::mutex> lg(mutex);
                 for (const auto &row: field)
                 {
                     for (const auto &cell: row)
                     {
                         if (cell.Object != nullptr && cell.Object->GetAliveStatus())
                         {
-                            std::lock_guard<std::mutex> lg(fieldMutex);
-                            cell.Object->Accept(visitor.get());
+                            cell.Object->Accept(mover.get());
                         }
                     }
                 }
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     });
 
+    constexpr std::size_t seconds = 30;
+    for (auto i = 0; i < seconds; ++i)
+    {
+        for (const auto &row: field)
+        {
+            for (const auto &cell: row)
+            {
+                if (cell.Object == nullptr || !cell.Object->GetAliveStatus() || cell.CellType == Cell::Type::Empty)
+                {
+                    std::cout << '.';
+                    continue;
+                }
+
+                switch (cell.CellType)
+                {
+                case Cell::Type::Orc:
+                    std::cout << 'O';
+                    break;
+                case Cell::Type::Bear:
+                    std::cout << 'B';
+                    break;
+                case Cell::Type::Squirrel:
+                    std::cout << 'S';
+                    break;
+                }
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    for (const auto &row: field)
+    {
+        for (const auto &cell: row)
+        {
+            if (cell.Object == nullptr || !cell.Object->GetAliveStatus() || cell.CellType == Cell::Type::Empty)
+            {
+                continue;
+            }
+
+            std::cout << cell.Object->GetDescription() << std::endl;
+        }
+    }
+
+    run.store(false);
+
     movement.join();
+    fighting.join();
 }

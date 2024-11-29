@@ -1,5 +1,5 @@
-#ifndef LAB6_COMMON_H
-#define LAB6_COMMON_H
+#ifndef LAB7_COMMON_H
+#define LAB7_COMMON_H
 
 #include <atomic>
 #include <cstddef>
@@ -13,6 +13,7 @@
 #include <iostream>
 #include <shared_mutex>
 #include <queue>
+#include <optional>
 
 class NPC;
 class Orc;
@@ -76,39 +77,45 @@ public:
     virtual ~Visitor() = default;
 
 public:
-    virtual bool Visit(Orc &ref) noexcept = 0;
-    virtual bool Visit(Squirrel &ref) noexcept = 0;
-    virtual bool Visit(Bear &ref) noexcept = 0;
+    virtual void Visit(Orc &ref) noexcept = 0;
+    virtual void Visit(Squirrel &ref) noexcept = 0;
+    virtual void Visit(Bear &ref) noexcept = 0;
+
+public:
+    // virtual void operator()() = 0;
+
 };
 
-class Fighter : public Visitor
+class Mover : public Visitor
 {
 
 public:
-    explicit Fighter(std::vector<std::vector<Cell>> &field, const std::vector<std::shared_ptr<Observer>> &observers, std::mutex &fieldMutex);
+    explicit Mover(std::vector<std::vector<Cell>> &field, const std::vector<std::shared_ptr<Observer>> &observers);
 
 public:
-    bool Visit(Orc &ref) noexcept override;
-    bool Visit(Squirrel &ref) noexcept override;
-    bool Visit(Bear &ref) noexcept override;
+    void Visit(Orc &ref) noexcept override;
+    void Visit(Squirrel &ref) noexcept override;
+    void Visit(Bear &ref) noexcept override;
 
 public:
-    void operator()();
+    // void operator()() override;
 
 private:
     void move(NPC *ptr, std::size_t &x, std::size_t &y);
     void notify(const Cell &killer, const Cell &victim) const noexcept;
+    // void addFight(Cell &attacker, Cell &defender);
 
 private:
-    struct Fight
-    {
-        Cell &attacker, &defender;
-    };    
+    // struct Fight
+    // {
+    //     Cell &attacker, &defender;
+    // };    
 
 private:
-    std::atomic<bool> &_run;
-    std::mutex &_mutex;
-    std::queue<Fight> _fights;
+    // std::atomic<bool> &_run;
+    // std::mutex &_mutex;
+    // std::shared_mutex &_smutex;
+    // std::queue<Fight> _fights;
     std::vector<std::vector<Cell>> &_field;
     const std::vector<std::shared_ptr<Observer>> _observers;
 };
@@ -123,7 +130,7 @@ public:
     virtual ~NPC() = default;
 
 public:
-    virtual bool Accept(Visitor *visitor) = 0;
+    virtual void Accept(Visitor *visitor) = 0;
 
     // virtual void SetAttackRange(std::size_t attackRange) noexcept = 0;
     virtual std::size_t GetMoveRange() const noexcept = 0;
@@ -132,8 +139,8 @@ public:
     virtual void SetAliveStatus(bool isAlive) noexcept = 0;
     virtual bool GetAliveStatus() const noexcept = 0;
 
-    virtual std::size_t GetXCoordinate() const noexcept = 0;
-    virtual std::size_t GetYCoordinate() const noexcept = 0;
+    virtual std::size_t &GetXCoordinate() noexcept = 0;
+    virtual std::size_t &GetYCoordinate() noexcept = 0;
 
     virtual std::string GetName() const noexcept = 0;
 
@@ -153,7 +160,7 @@ protected:
 
     const std::string _name;
     bool _isAlive = true;
-    const Point _place;
+    Point _place;
 };
 
 class Orc : public NPC
@@ -163,7 +170,7 @@ public:
     explicit Orc(const std::string &name, std::size_t coordX, std::size_t coordY);
 
 public:
-    bool Accept(Visitor *visitor) override;
+    void Accept(Visitor *visitor) override;
 
     // void SetAttackRange(std::size_t attackRange) noexcept override;
     std::size_t GetMoveRange() const noexcept override;
@@ -172,8 +179,8 @@ public:
     void SetAliveStatus(bool isAlive) noexcept override;
     bool GetAliveStatus() const noexcept override;
 
-    std::size_t GetXCoordinate() const noexcept override;
-    std::size_t GetYCoordinate() const noexcept override;
+    std::size_t &GetXCoordinate() noexcept override;
+    std::size_t &GetYCoordinate() noexcept override;
 
     std::string GetName() const noexcept override;
 
@@ -188,7 +195,7 @@ public:
     explicit Squirrel(const std::string &name, std::size_t coordX, std::size_t coordY);
 
 public:
-    bool Accept(Visitor *visitor) override;
+    void Accept(Visitor *visitor) override;
 
     // void SetAttackRange(std::size_t attackRange) noexcept override;
     std::size_t GetMoveRange() const noexcept override;
@@ -197,8 +204,8 @@ public:
     void SetAliveStatus(bool isAlive) noexcept override;
     bool GetAliveStatus() const noexcept override;
 
-    std::size_t GetXCoordinate() const noexcept override;
-    std::size_t GetYCoordinate() const noexcept override;
+    std::size_t &GetXCoordinate() noexcept override;
+    std::size_t &GetYCoordinate() noexcept override;
 
     std::string GetName() const noexcept override;
 
@@ -213,7 +220,7 @@ public:
     explicit Bear(const std::string &name, std::size_t coordX, std::size_t coordY);
 
 public:
-    bool Accept(Visitor *visitor) override;
+    void Accept(Visitor *visitor) override;
 
     // void SetAttackRange(std::size_t attackRange) noexcept override;
     std::size_t GetMoveRange() const noexcept override;
@@ -222,8 +229,8 @@ public:
     void SetAliveStatus(bool isAlive) noexcept override;
     bool GetAliveStatus() const noexcept override;
 
-    std::size_t GetXCoordinate() const noexcept override;
-    std::size_t GetYCoordinate() const noexcept override;
+    std::size_t &GetXCoordinate() noexcept override;
+    std::size_t &GetYCoordinate() noexcept override;
 
     std::string GetName() const noexcept override;
 
@@ -242,6 +249,37 @@ public:
 private:
     static std::vector<std::string> tokenize(const std::string &description) noexcept;
 
+};
+
+
+class Fighter
+{
+
+private:
+    explicit Fighter(std::shared_mutex &smutex, std::atomic<bool> &run);
+
+public:    
+    Fighter(Fighter &&other) = delete;
+
+public:
+    static void ConstructInstance(std::shared_mutex &smutex, std::atomic<bool> &run);
+    static std::shared_ptr<Fighter> GetInstance();
+
+public:
+    void operator()() noexcept;
+    void addFight(Cell &attacker, Cell &defender);
+
+private:
+    struct Fight 
+    {
+        Cell &attacker, &defender;
+    };
+
+    std::queue<Fight> _fights;
+    std::shared_mutex &_smutex; 
+    std::atomic<bool> &_run;
+
+    static std::shared_ptr<Fighter> _instance;
 };
 
 class GameHandler

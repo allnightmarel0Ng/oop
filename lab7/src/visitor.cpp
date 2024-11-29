@@ -1,96 +1,83 @@
 #include "common.h"
 
-Fighter::Fighter(std::vector<std::vector<Cell>> &field, const std::vector<std::shared_ptr<Observer>> &observers, std::mutex &fieldMutex):
-    _field(field), _observers(observers), _fights(), _mutex(fieldMutex)
+Mover::Mover(std::vector<std::vector<Cell>> &field, const std::vector<std::shared_ptr<Observer>> &observers):
+    _field(field), _observers(observers)
 {
 
 }
 
-bool Fighter::Visit(Orc &ref) noexcept
+void Mover::Visit(Orc &ref) noexcept
 {
-    auto x = ref.GetXCoordinate();
-    auto y = ref.GetYCoordinate();
-    
+    auto &x = ref.GetXCoordinate();
+    auto &y = ref.GetYCoordinate();
+
     move(&ref, x, y);
 
+    auto attackRange = ref.GetAttackRange();
 
-    
+    auto leftBorder = x < attackRange ? 0 : x - attackRange;
+    auto rightBorder = std::min<std::size_t>(x + attackRange, _field.size() - 1);
+    auto upperBorder = y < attackRange ? 0 : y - attackRange;
+    auto lowerBorder = std::min<std::size_t>(y + attackRange, _field.size() - 1);
 
-    return true;
-    // int attackRange = ref.GetAttackRange();
+    for (auto i = leftBorder; i < rightBorder; ++i)
+    {
+        for (auto j = upperBorder; j < lowerBorder; ++j)
+        {
+            if (i == x && j == y)
+            {
+                continue;
+            }
+            
+            auto &current = _field[i][j];
+            if (current.Object == nullptr || !current.Object->GetAliveStatus() || current.CellType == Cell::Type::Squirrel || current.CellType == Cell::Type::Empty)
+            {
+                continue;
+            }
 
-    // auto leftBound = std::max(x - attackRange, 0);
-    // auto rightBound = std::min(x + attackRange, 500);
-
-    // auto upperBound = std::max(y - attackRange, 0);
-    // auto lowerBound = std::min(y + attackRange, 500);
-
-    // for (std::size_t i = leftBound; i <= rightBound; i++)
-    // {
-    //     for (std::size_t j = upperBound; j <= lowerBound; j++)
-    //     {
-    //         if (i == x || j == y)
-    //         {
-    //             continue;
-    //         }
-
-    //         auto &current = _field[i][j];
-    //         if (current.CellType == Cell::Type::Empty || current.CellType == Cell::Type::Squirrel)
-    //         {
-    //             continue;
-    //         }
-
-    //         notify(_field[x][y], current);
-    //         current.Object->SetAliveStatus(false);
-    //         // current.Object = nullptr;
-    //     }
-    // }
+            Fighter::GetInstance()->addFight(_field[x][y], current);
+        }
+    }
 }
 
-bool Fighter::Visit(Squirrel &ref) noexcept
-{
-    return false;
+void Mover::Visit(Squirrel &ref) noexcept
+{    
+    move(&ref, ref.GetXCoordinate(), ref.GetYCoordinate());
 }
 
-bool Fighter::Visit(Bear &ref) noexcept
-{
-    int x = ref.GetXCoordinate();
-    int y = ref.GetYCoordinate();
-    return true;
-    // int attackRange = ref.GetAttackRange();
+void Mover::Visit(Bear &ref) noexcept
+{    
+    auto &x = ref.GetXCoordinate();
+    auto &y = ref.GetYCoordinate();
+    move(&ref, x, y);
 
-    // auto leftBound = std::max(x - attackRange, 0);
-    // auto rightBound = std::min(x + attackRange, 500);
+    int attackRange = ref.GetAttackRange();
 
-    // auto upperBound = std::max(y - attackRange, 0);
-    // auto lowerBound = std::min(y + attackRange, 500);
+    auto leftBound = x < attackRange ? 0 : x - attackRange; // std::max<std::size_t>(x - attackRange, 0);
+    auto rightBound = std::min<std::size_t>(x + attackRange, _field.size() - 1);
 
-    // for (std::size_t i = leftBound; i <= rightBound; i++)
-    // {
-    //     for (std::size_t j = upperBound; j <= lowerBound; j++)
-    //     {
-    //         if (i == x || j == y)
-    //         {
-    //             continue;
-    //         }
+    auto upperBound = y < attackRange ? 0 : y - attackRange; // std::max<std::size_t>(y - attackRange, 0);
+    auto lowerBound = std::min<std::size_t>(y + attackRange, _field.size() - 1);
 
-    //         auto &current = _field[i][j];
-    //         if (current.CellType == Cell::Type::Squirrel)
-    //         {
-    //             notify(_field[x][y], current);
-    //             current.Object->SetAliveStatus(false);
-    //             // current.Object = nullptr;
-    //         }
-    //     }
-    // }
+    for (std::size_t i = leftBound; i <= rightBound; i++)
+    {
+        for (std::size_t j = upperBound; j <= lowerBound; j++)
+        {
+            if (i == x && j == y)
+            {
+                continue;
+            }
+
+            auto &current = _field[i][j];
+            if (current.CellType == Cell::Type::Squirrel)
+            {
+                Fighter::GetInstance()->addFight(_field[x][y], current);
+            }
+        }
+    }
 }
 
-void Fighter::operator()()
-{
-    
-}
-
-void Fighter::move(NPC *ptr, std::size_t &x, std::size_t &y)
+void Mover::move(NPC *ptr, std::size_t &x, std::size_t &y)
 {
     auto moveRange = ptr->GetMoveRange();
 
@@ -100,31 +87,32 @@ void Fighter::move(NPC *ptr, std::size_t &x, std::size_t &y)
 
     if (direction == 0)
     {
-        newX = std::max<std::size_t>(0, x - moveRange);
+        newX = x < moveRange ? 0 : x - moveRange;
     }
     else if (direction == 1)
     {
-        newX = std::min<std::size_t>(_field.size(), x + moveRange);
+        newX = std::min(_field.size() - 1, x + moveRange);
     }
     else if (direction == 2)
     {
-        newY = std::max<std::size_t>(0, y - moveRange);
+        newY = y < moveRange ? 0 : y - moveRange;
     }
     else if (direction == 3)
     {
-        newY = std::min<std::size_t>(_field.size(), y + moveRange);
+        newY = std::min(_field.size() - 1, y + moveRange);
     }
 
     if (_field[newX][newY].Object == nullptr || !_field[newX][newY].Object->GetAliveStatus())
     {
-        _field[newX][newY] = std::move(_field[x][y]);
+        _field[newX][newY].CellType = _field[x][y].CellType;
+        _field[newX][newY].Object = std::move(_field[x][y].Object);
         _field[x][y] = Cell();
         x = newX;
         y = newY;
     }
 }
 
-void Fighter::notify(const Cell &killer, const Cell &victim) const noexcept
+void Mover::notify(const Cell &killer, const Cell &victim) const noexcept
 {
     for (const auto &ptr: _observers)
     {

@@ -5,7 +5,7 @@
 TEST(game, test1)
 {
     std::string input =
-        "2 load in.txt\n"
+        "2 load ../tests/in.txt\n"
         "4 50\n"
         "3\n"
         "5\n";
@@ -31,7 +31,7 @@ TEST(game, test1)
 TEST(game, test2)
 {
     std::string input = 
-        "2 load in.txt\n"
+        "2 load ../tests/in.txt\n"
         "4 200\n"
         "3\n"
         "1 Bear Name 200 200\n"
