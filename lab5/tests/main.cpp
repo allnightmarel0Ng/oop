@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "../src/allocator.h"
-#include "../src/list.h"
+#include <allocator.h>
+#include <list.h>
 
 TEST(allocator, test1)
 {

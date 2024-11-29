@@ -1,7 +1,10 @@
-#include "common.h"
+#include "../include/visitor.h"
 
-Mover::Mover(std::vector<std::vector<Cell>> &field, const std::vector<std::shared_ptr<Observer>> &observers):
-    _field(field), _observers(observers)
+#include "../include/npc.h"
+#include "../include/fighter.h"
+
+Mover::Mover(std::vector<std::vector<Cell>> &field):
+    _field(field)
 {
 
 }
@@ -109,13 +112,5 @@ void Mover::move(NPC *ptr, std::size_t &x, std::size_t &y)
         _field[x][y] = Cell();
         x = newX;
         y = newY;
-    }
-}
-
-void Mover::notify(const Cell &killer, const Cell &victim) const noexcept
-{
-    for (const auto &ptr: _observers)
-    {
-        ptr->HandleEvent(killer, victim);
     }
 }

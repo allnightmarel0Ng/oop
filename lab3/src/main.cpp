@@ -1,16 +1,16 @@
 #include <iostream>
 
-#include "figure.h"
-#include "rhombus.h"
-#include "rectangle.h"
-#include "trapezoid.h"
-#include "vector.h"
+#include <figure.h>
+#include <rhombus.h>
+#include <rectangle.h>
+#include <trapezoid.h>
+#include <vector.h>
 
 int main()
 {
     Rhombus rhombus;
     Rectangle rectangle;
-    Trapezoid trapezoid;
+    Trapezoid trapezoid(Point(0, 0), Point(1, 1), Point(2, 1), Point(3, 0));
 
     std::cin >> rhombus >> rectangle >> trapezoid;
 

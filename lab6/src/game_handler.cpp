@@ -1,4 +1,6 @@
-#include "common.h"
+#include "../include/game_handler.h"
+
+#include "observer.h"
 
 void GameHandler::Game(std::istream &is, std::ostream &os)
 {

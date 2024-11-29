@@ -1,4 +1,4 @@
-#include "common.h"
+#include "../include/npc.h"
 
 Cell::Cell(Cell::Type type, std::shared_ptr<NPC> &&object): 
     CellType(type), Object(std::move(object))

@@ -2,8 +2,8 @@
 #include <cstdint>
 #include <map>
 
-#include "allocator.h"
-#include "list.h"
+#include <allocator.h>
+#include <list.h>
 
 int main()
 {

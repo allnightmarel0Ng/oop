@@ -1,4 +1,4 @@
-#include "rectangle.h"
+#include "../include/rectangle.h"
 
 Rectangle::Rectangle(
     const Point &p1, 

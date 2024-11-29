@@ -12,22 +12,27 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(
         googletest)
 
-add_executable(main
+add_executable(
+        main
         src/main.cpp
-        src/rectangle.h
-        src/point.h
-        src/trapezoid.h
-        src/rhombus.h
-        src/vector.h)
+)
+target_include_directories(
+        main
+        PUBLIC
+        ./include/
+)
 
-add_executable(test 
+add_executable(
+        tests 
         tests/main.cpp
-        src/rectangle.h
-        src/point.h
-        src/trapezoid.h
-        src/rhombus.h
-        src/vector.h)
+)
 target_link_libraries(
-        test
+        tests
         PRIVATE
-        gtest_main)
+        gtest_main
+)
+target_include_directories(
+        tests
+        PUBLIC
+        ./include/
+)

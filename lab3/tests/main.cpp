@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include "../src/figure.h"
-#include "../src/rhombus.h"
-#include "../src/rectangle.h"
-#include "../src/trapezoid.h"
-#include "../src/vector.h"
+#include <figure.h>
+#include <rhombus.h>
+#include <rectangle.h>
+#include <trapezoid.h>
+#include <vector.h>
 
 TEST(rhombus, ctor)
 {

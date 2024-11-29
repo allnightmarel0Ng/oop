@@ -14,17 +14,29 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(src)
 
-add_executable(lab1
+add_executable(
+        main
         src/main.cpp
         src/balance.cpp
-        src/balance.h)
+)
+target_include_directories(
+        main
+        PUBLIC
+        ./include/
+)
 
-add_executable(lab1_tests
-        tests/lab1_tests.cpp
+add_executable(
+        tests
+        tests/main.cpp
         src/balance.cpp
-        src/balance.h)
+)
 target_link_libraries(
-        lab1_tests
+        tests
         PRIVATE
         gtest_main
+)
+target_include_directories(
+        tests
+        PUBLIC
+        ./include/
 )

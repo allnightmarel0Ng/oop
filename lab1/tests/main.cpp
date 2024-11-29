@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
-#include "../src/balance.h"
+
+#include <balance.h>
 
 TEST(positiveTests, test1)
 {

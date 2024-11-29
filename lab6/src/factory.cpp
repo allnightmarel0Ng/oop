@@ -1,4 +1,4 @@
-#include "common.h"
+#include "../include/factory.h"
 
 Cell Factory::CreateNPC(const std::string &description)
 {

@@ -12,15 +12,27 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(
         googletest)
 
-add_executable(main
+add_executable(
+        main
         src/main.cpp
-        src/allocator.h
-        src/list.h)
-add_executable(test
-        tests/main.cpp
-        src/allocator.h
-        src/list.h)
-target_link_libraries(
-        test
+)
+target_include_directories(
+        main
         PRIVATE
-        gtest_main)
+        ./include/
+)
+
+add_executable(
+        tests
+        tests/main.cpp
+)
+target_link_libraries(
+        tests
+        PRIVATE
+        gtest_main
+)
+target_include_directories(
+        tests
+        PRIVATE
+        ./include/
+)

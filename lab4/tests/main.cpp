@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "../src/rectangle.h"
-#include "../src/trapezoid.h"
-#include "../src/rhombus.h"
-#include "../src/vector.h"
+#include <rectangle.h>
+#include <trapezoid.h>
+#include <rhombus.h>
+#include <vector.h>
 
 TEST(vector, test1)
 {

@@ -1,4 +1,4 @@
-#include "balance.h"
+#include "../include/balance.h"
 
 bool IsBalancedParentheses(const std::string &toCheck)
 {

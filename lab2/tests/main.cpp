@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
-#include "../src/octal.h"
+
+#include <octal.h>
 
 TEST(tests, test1)
 {

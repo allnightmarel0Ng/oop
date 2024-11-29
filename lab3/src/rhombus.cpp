@@ -1,4 +1,4 @@
-#include "rhombus.h"
+#include "../include/rhombus.h"
 
 Rhombus::Rhombus(
     const Point &p1,

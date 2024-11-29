@@ -1,5 +1,6 @@
 #include <iostream>
-#include "balance.h"
+
+#include <balance.h>
 
 int main()
 {

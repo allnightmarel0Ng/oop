@@ -1,4 +1,6 @@
-#include "common.h"
+#include "../include/visitor.h"
+
+#include "../include/npc.h"
 
 Fighter::Fighter(std::vector<std::vector<Cell>> &field, const std::vector<std::shared_ptr<Observer>> &observers):
     _field(field), _observers(observers)

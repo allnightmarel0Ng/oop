@@ -1,5 +1,5 @@
-#ifndef OOP_OCTAL_H
-#define OOP_OCTAL_H
+#ifndef LAB2_OCTAL_H
+#define LAB2_OCTAL_H
 
 #include <string>
 #include <iostream>
@@ -56,4 +56,4 @@ private:
 
 };
 
-#endif //OOP_OCTAL_H
+#endif //LAB2_OCTAL_H

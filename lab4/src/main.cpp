@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "figure.h"
-#include "rhombus.h"
-#include "rectangle.h"
-#include "trapezoid.h"
-#include "vector.h"
+#include <figure.h>
+#include <rhombus.h>
+#include <rectangle.h>
+#include <trapezoid.h>
+#include <vector.h>
 
 int main()
 {

@@ -1,4 +1,6 @@
-#include "common.h"
+#include "../include/observer.h"
+
+#include "../include/npc.h"
 
 std::string Observer::CellTypeToString(Cell::Type type) noexcept
 {
@@ -30,12 +32,12 @@ void FileLogger::HandleEvent(const Cell &killer, const Cell &victim) noexcept
 void ConsoleLogger::HandleEvent(const Cell &killer, const Cell &victim) noexcept
 {
     std::cout << this->CellTypeToString(killer.CellType) << " " 
-        << killer.Object->GetName() << " " 
-        << killer.Object->GetXCoordinate() << " "
-        << killer.Object->GetYCoordinate() << " "
-        << "kills "
-        << this->CellTypeToString(victim.CellType) << " "
-        << victim.Object->GetName() << " " 
-        << victim.Object->GetXCoordinate() << " "
-        << victim.Object->GetYCoordinate() << std::endl;
+              << killer.Object->GetName() << " " 
+              << killer.Object->GetXCoordinate() << " "
+              << killer.Object->GetYCoordinate() << " "
+              << "kills "
+              << this->CellTypeToString(victim.CellType) << " "
+              << victim.Object->GetName() << " " 
+              << victim.Object->GetXCoordinate() << " "
+              << victim.Object->GetYCoordinate() << std::endl;
 }

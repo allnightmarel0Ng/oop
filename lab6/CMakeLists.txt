@@ -12,22 +12,37 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(
         googletest)
 
-add_executable(main
+add_executable(
+        main
         src/main.cpp
         src/npc.cpp
         src/visitor.cpp
         src/factory.cpp
         src/observer.cpp
-        src/game-handler.cpp)
+        src/game_handler.cpp
+)
+target_include_directories(
+        main
+        PUBLIC
+        ./include/
+)
 
-add_executable(test
+add_executable(
+        tests
         tests/main.cpp
         src/npc.cpp
         src/visitor.cpp
         src/factory.cpp
         src/observer.cpp
-        src/game-handler.cpp)
+        src/game_handler.cpp
+)
 target_link_libraries(
-        test
+        tests
         PRIVATE
-        gtest_main)
+        gtest_main
+)
+target_include_directories(
+        tests
+        PUBLIC
+        ./include/
+)

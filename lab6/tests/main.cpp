@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../src/common.h"
+#include <game_handler.h>
 
 TEST(game, test1)
 {

@@ -14,12 +14,15 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(src)
 
-add_executable(lab2_tests
+add_executable(
+        tests
         src/octal.cpp
-        src/octal.h
-        tests/lab2_tests.cpp)
+        tests/main.cpp)
 target_link_libraries(
-        lab2_tests
+        tests
         PRIVATE
-        gtest_main
-)
+        gtest_main)
+target_include_directories(
+        tests
+        PUBLIC
+        ./include/)

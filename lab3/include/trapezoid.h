@@ -10,10 +10,10 @@ class Trapezoid final:
 {
 public:
     explicit Trapezoid(
-        const Point &p1 = Point(), 
-        const Point &p2 = Point(), 
-        const Point &p3 = Point(), 
-        const Point &p4 = Point());
+        const Point &p1, 
+        const Point &p2, 
+        const Point &p3, 
+        const Point &p4);
 
 public:
     ~Trapezoid() override = default;

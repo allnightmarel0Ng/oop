@@ -1,4 +1,4 @@
-#include "octal.h"
+#include "../include/octal.h"
 
 Octal::Octal():
     _size(1), _array(new unsigned char[_size * sizeof(unsigned char)])

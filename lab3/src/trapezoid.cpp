@@ -1,4 +1,4 @@
-#include "trapezoid.h"
+#include "../include/trapezoid.h"
 
 Trapezoid::Trapezoid(
     const Point &p1, 
